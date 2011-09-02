@@ -28,44 +28,6 @@ module Jekyll
 
       self.reset
       self.setup
-      self.loadtimestamps
-    end
-
-    def loadtimestamps
-      # Check that file exists, if not create it.
-      @timestamps = Hash.new
-      if File.readable?( File.join(self.source, '.timestamps') )
-        File.open( File.join(self.source, '.timestamps'), 'r' ) do |infile|
-          while (line = infile.gets)
-            i = line.index(':')
-            if i
-              @timestamps[line[i+1 .. -1].strip] = line[0..i-1].strip
-            end
-          end
-        end
-      end
-    end
-
-    # If post title not found, add entry & treat as changed.
-    def mtime_i(base, dir, file)
-      # Check if file entry exists, else not create it.
-      mtime = Time.now.to_i
-      if @timestamps.has_key?(File.join( dir, file ))
-        mtime = @timestamps[ File.join( dir, file ) ]
-      else
-        print File.join(self.source, dir, file), " ==== ", File.join(base, file), "\n"
-        mtime =  File.mtime( File.join(base, file) ).to_i # Use the file's timestamp if new file
-        print "Adding to hash: #{mtime}: #{dir}/#{file}\n"
-        File.open( File.join(self.source, '.timestamps'), 'a' ) do |outfile|
-          outfile.puts "#{mtime}: #{dir}/#{file}"
-        end
-        @timestamps[ File.join( dir, file ) ] = mtime
-      end
-      mtime.to_i
-    end
-
-    def changed?(source, dir, name)
-      File.stat( File.join(source, dir, '_posts', name) ).mtime.to_i < self.mtime_i( File.join(source, dir), name ).to_i
     end
 
     # Public: Read, process, and write this Site to output.

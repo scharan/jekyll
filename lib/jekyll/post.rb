@@ -211,7 +211,6 @@ module Jekyll
       File.open(path, 'w') do |f|
         f.write(self.output)
       end
-      #File.utime(File.atime(File.join(@base, @name)), site.mtime_i( @base, '_posts', @name), path)
       File.utime(File.atime(path), File.mtime(File.join(@base, @name)), path)
     end
 
