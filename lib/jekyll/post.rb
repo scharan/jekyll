@@ -21,6 +21,7 @@ module Jekyll
     attr_accessor :site
     attr_accessor :data, :content, :output, :ext
     attr_accessor :date, :slug, :published, :tags, :categories
+    attr_reader   :name
 
     # Initialize this Post instance.
     #   +site+ is the Site
@@ -33,7 +34,7 @@ module Jekyll
       @site = site
       @base = File.join(source, dir, '_posts')
       @name = name
-
+      
       self.categories = dir.split('/').reject { |x| x.empty? }
       self.process(name)
       self.read_yaml(@base, name)
@@ -210,6 +211,8 @@ module Jekyll
       File.open(path, 'w') do |f|
         f.write(self.output)
       end
+      #File.utime(File.atime(File.join(@base, @name)), site.mtime_i( @base, '_posts', @name), path)
+      File.utime(File.atime(path), File.mtime(File.join(@base, @name)), path)
     end
 
     # Convert this post into a Hash for use in Liquid templates.
