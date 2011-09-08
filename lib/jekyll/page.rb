@@ -133,6 +133,11 @@ module Jekyll
       File.open(path, 'w') do |f|
         f.write(self.output)
       end
+
+      if File.readable?(File.join(@base, @dir, @name))
+        print File.join(@base, @dir, @name), " readable?: ", File.readable?(File.join(@base, @dir, @name)), "++++\n"
+        File.utime( File.atime(path), File.mtime(File.join(@base, @dir, @name)).to_i, path )
+      end
     end
 
     # Returns the object as a debug String.
